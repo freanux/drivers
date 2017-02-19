@@ -35,6 +35,8 @@ MODULE_VERSION(DRIVER_VERSION);
 
 #define CMD_CLEAR_DISPLAY 0x01
 
+#define CMD_RETURN_HOME   0x02
+
 #define CMD_DISPLAY       0x08
 #define CMD_DSP_ON        0x04
 #define CMD_DSP_CUR_ON    0x02
@@ -207,7 +209,7 @@ static struct dsp_command {
 #define NUM_DSP_CMDS (sizeof(dsp_commands) / sizeof(struct dsp_command))
 
 static ssize_t lcd_write(struct file *f, const char __user *buffer, size_t len, loff_t *off) {
-    size_t sz = len;
+    ssize_t sz = (ssize_t)len;
     int i;
 
     if (mutex_lock_interruptible(&dev_mutex)) {
@@ -232,7 +234,8 @@ static ssize_t lcd_write(struct file *f, const char __user *buffer, size_t len, 
                 for (i = 0; i < NUM_DSP_CMDS; ++i) {
                     if (dsp_commands[i].command == c) {
                         if (dsp_commands[i].params > len) {
-                            return -EFAULT;
+                            sz = -EFAULT;
+                            goto lcd_write_out;
                         }
                         dsp_commands[i].handler(&buffer[1]);
                         len -= dsp_commands[i].params;
@@ -244,8 +247,9 @@ static ssize_t lcd_write(struct file *f, const char __user *buffer, size_t len, 
             buffer++;
         }
     }
-    mutex_unlock(&dev_mutex);
 
+lcd_write_out:
+    mutex_unlock(&dev_mutex);
     return sz;
 }
 
