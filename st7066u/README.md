@@ -1,5 +1,5 @@
 # HD44780/ST7066U display driver
-This kernel modules drives an Hitachi HD44780/Sitronix ST7066U LCD controller with 4 rows and 20 characters per line.
+This kernel module drives an Hitachi HD44780/Sitronix ST7066U LCD controller with 4 rows and 20 characters per line.
 It drives the controller in 4 bit mode. Once the driver is probed, the device `/dev/lcd` will appear. Just write into it to send characters to the LCD.
 
 ![alt tag](https://raw.githubusercontent.com/freanux/drivers/master/st7066u/pictures/st7066u.jpg)
