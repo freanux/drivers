@@ -42,7 +42,7 @@ Send a 0x12 with to following bytes for x and y position, beginning with zero (0
 Send a 0x13 with one following byte, if set, each printing to the device, the whole screen will be cleared.
 
 ### Define character (0x14)
-To define a character send a 0x14, then your character code (0 - 8), then eight bytes for each row.
+To define a character send a 0x14, then your character code (0 - 7), then eight bytes for each row.
 
 ## Examples
 ```
