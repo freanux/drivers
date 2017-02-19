@@ -191,6 +191,16 @@ static void dsp_cmd_draw_mode(const char __user *buffer) {
     draw_mode_reset = (buffer[0] > 0);
 }
 
+static void dsp_cmd_define_char(const char __user *buffer) {
+    int i;
+
+    send_command(CMD_SET_CGRAM | ((buffer[0] % 8) << 3));
+    for (i = 1; i < 9; ++i) {
+        send_character(buffer[i]);
+    }
+    send_command(CMD_RETURN_HOME);
+}
+
 static void dsp_cmd_newline(const char __user *buffer) {
     new_line();
 }
@@ -200,10 +210,11 @@ static struct dsp_command {
     int params;
     void (*handler)(const char __user *buffer);
 } dsp_commands[] = {
-    { 0x01, 0, dsp_cmd_clr },
-    { 0x02, 2, dsp_cmd_cursor },
-    { 0x03, 2, dsp_cmd_setxy },
-    { 0x04, 1, dsp_cmd_draw_mode },
+    { 0x10, 0, dsp_cmd_clr },
+    { 0x11, 2, dsp_cmd_cursor },
+    { 0x12, 2, dsp_cmd_setxy },
+    { 0x13, 1, dsp_cmd_draw_mode },
+    { 0x14, 9, dsp_cmd_define_char },
     { 0x0a, 0, dsp_cmd_newline },
 };
 #define NUM_DSP_CMDS (sizeof(dsp_commands) / sizeof(struct dsp_command))
@@ -221,12 +232,12 @@ static ssize_t lcd_write(struct file *f, const char __user *buffer, size_t len, 
     }
 
     if (len) {
-        while (len-- && *buffer) {
+        while (len--) {
             char c = *buffer;
             if (cursor_x > LCD_WIDTH - 1) {
                 new_line();
             }
-            if (likely(c > 31)) {
+            if (likely(c > 31 || c < 8)) {
                 lcd_buffer[cursor_y][cursor_x] = c;
                 send_character(c);
                 cursor_x++;

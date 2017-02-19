@@ -29,24 +29,28 @@ or you can change the pin configuration in the code:
 ## Driver commands
 This driver can handle a bunch of control codes:
 
-### Clear display
-Send a 0x01 to the device. 
+### Clear display (0x10)
+To clear the LCD display, send a 0x10 to the device. 
 
-### Cursor management
-Send a 0x02 to the device with two following bytes. The first byte enables/disables the cursor, the second sets the blinking mode.
+### Cursor management (0x11)
+Send a 0x11 to the device with two following bytes. The first byte enables/disables the cursor, the second sets the blinking mode.
 
-### Set cursor position
-Send a 0x03 with to following bytes for x and y position, beginning with zero (0, 0).
+### Set cursor position (0x12)
+Send a 0x12 with to following bytes for x and y position, beginning with zero (0, 0).
 
-### Draw mode
-Send a 0x04 with one following byte, if set, each printing to the device, the whole screen will be cleared.
+### Draw mode (0x13)
+Send a 0x13 with one following byte, if set, each printing to the device, the whole screen will be cleared.
+
+### Define character (0x14)
+To define a character send a 0x14, then your character code (0 - 8), then eight bytes for each row.
 
 ## Examples
 ```
 $ echo "Hello world" > /dev/lcd
-$ printf "\x04\x01" > /dev/lcd
-$ printf "\x02\x01\x01" > /dev/lcd
-$ printf "\x02\x00\x00" > /dev/lcd
+$ printf "\x13\x01" > /dev/lcd
+$ printf "\x11\x01\x01" > /dev/lcd
+$ printf "\x12\x03\x03Hello world" > /dev/lcd
+$ printf "\x14\x01\x00\x0a\x1f\x1f\x1f\x0e\x04\x00" > /dev/lcd
 ```
 
 ## Tested on
