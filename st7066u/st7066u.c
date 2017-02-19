@@ -347,7 +347,7 @@ static int __init st7066u_init(void) {
     send_command(CMD_DISPLAY);
     send_command(CMD_CLEAR_DISPLAY);
     send_command(CMD_ENTRY_MODE | CMD_EM_RIGHT);
-    send_command(CMD_DISPLAY | CMD_DSP_ON | CMD_DSP_CUR_ON | CMD_DSP_CUR_BLINK);
+    send_command(CMD_DISPLAY | CMD_DSP_ON);
 
     /* clear buffer */
     clear_buffer();
