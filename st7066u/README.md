@@ -3,6 +3,7 @@ This kernel modules drives an Hitachi HD44780/Sitronix ST7066U LCD controller wi
 It drives the controller in 4 bit mode. Once the driver is probed, the device `/dev/lcd` will appear. Just write into it to send characters to the LCD.
 
 ## GPIO pin configuration
+```
 RS -> GPIO pin 4
 RW -> GPIO pin 17
 EN -> GPIO pin 27
@@ -10,7 +11,7 @@ D4 -> GPIO pin 22
 D5 -> GPIO pin 23
 D6 -> GPIO pin 24
 D7 -> GPIO pin 25
-
+```
 or you can change the pin configuration in the code:
 ```
 #define LCD_RS 4
